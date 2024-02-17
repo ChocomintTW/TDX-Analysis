@@ -37,3 +37,8 @@ with open("ODFare-Simple.json", 'w') as json_file:
 ```
 
 </details>
+
+## 檔案錯誤問題
+
+### 北捷
+北捷 (TRTC) 之 `StationTimeTable.json` 中將原應為 `DestinationStationID` 錯誤的弄成了 `DestinationStaionID`，因此程式碼中先行以其提供之原始 key:`DestinationStaionID` 進行讀取。

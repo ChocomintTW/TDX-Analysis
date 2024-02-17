@@ -18,7 +18,7 @@ data class TrainTimetable(
             val trainTypeID    = trainInfo["TrainTypeID"]?.asString
             val startStationID = trainInfo["StartingStationID"].asString
             val endStationID   = trainInfo["EndingStationID"].asString
-            val serviceDay     = ServiceDay.fromJson(json["ServiceDay"].asJsonObject)
+            val serviceDay     = ServiceDay.fromJson(json["ServiceDay"].asJsonObject, false)
 
             val stopTimeList   = json["StopTimes"].asJsonArray
                 .map { StopTime.fromJson(it.asJsonObject) }

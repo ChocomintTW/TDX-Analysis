@@ -1,4 +1,4 @@
-package net.chocomint.tdx.geometry
+package net.chocomint.tdx.utils
 
 import com.google.gson.JsonObject
 import net.chocomint.tdx.district.BoundaryShape

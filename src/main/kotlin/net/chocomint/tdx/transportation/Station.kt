@@ -2,7 +2,8 @@ package net.chocomint.tdx.transportation
 
 import com.google.gson.JsonObject
 import net.chocomint.tdx.Name
-import net.chocomint.tdx.geometry.Position
+import net.chocomint.tdx.Name.Companion.asName
+import net.chocomint.tdx.utils.Position
 
 data class Station(
     val uid: String,
@@ -19,7 +20,7 @@ data class Station(
             val uid      = json["StationUID"].asString
             val id       = json["StationID"].asString
             val code     = json["StationCode"]?.asString
-            val name     = Name.fromJson(json["StationName"].asJsonObject)
+            val name     = json["StationName"].asName
             val position = Position.fromJson(json["StationPosition"].asJsonObject)
             val address  = json["StationAddress"].asString
             val phone    = json["StationPhone"]?.asString

@@ -2,6 +2,7 @@ package net.chocomint.tdx.transportation.tra
 
 import com.google.gson.JsonObject
 import net.chocomint.tdx.Name
+import net.chocomint.tdx.Name.Companion.asName
 
 data class TRALine(
     val id: String,
@@ -12,8 +13,8 @@ data class TRALine(
     companion object {
         fun fromJson(json: JsonObject): TRALine {
             val id = json["LineID"].asString
-            val name = Name.fromJson(json["LineName"].asJsonObject)
-            val sectionName = Name.fromJson(json["LineSectionName"].asJsonObject)
+            val name = json["LineName"].asName
+            val sectionName = json["LineSectionName"].asName
             val isBranch = json["IsBranch"].asBoolean
 
             return TRALine(id, name, sectionName, isBranch)

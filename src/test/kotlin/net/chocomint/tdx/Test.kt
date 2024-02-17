@@ -1,11 +1,11 @@
 package net.chocomint.tdx
 
-import net.chocomint.tdx.geometry.Position
 import net.chocomint.tdx.transportation.ServiceDay
+import net.chocomint.tdx.utils.toColor
 import org.locationtech.jts.geom.Lineal
 import org.locationtech.jts.geom.Polygon
 import org.locationtech.jts.io.WKTReader
-import java.time.DayOfWeek
+import java.awt.Color
 
 fun main() {
 //    val vb = District.readVillageBoundary()
@@ -19,4 +19,6 @@ fun main() {
 
     val sd = ServiceDay(listOf(false, false, false, false, false, true, true), null, null)
     println(sd.onlyWeekend())
+
+    println("#0a59ae".toColor())
 }
