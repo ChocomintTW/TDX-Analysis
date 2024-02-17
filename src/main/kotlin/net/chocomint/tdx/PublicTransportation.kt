@@ -8,10 +8,10 @@ import net.chocomint.tdx.transportation.tra.TRAODFare
 import net.chocomint.tdx.transportation.Station
 import net.chocomint.tdx.transportation.TrainTimetable
 import net.chocomint.tdx.transportation.thsr.THSRODFare
-import net.chocomint.tdx.transportation.trtc.StationTimetable
-import net.chocomint.tdx.transportation.trtc.TRTCLine
-import net.chocomint.tdx.transportation.trtc.TRTCODFare
-import net.chocomint.tdx.transportation.trtc.TravelTime
+import net.chocomint.tdx.transportation.metro.StationTimetable
+import net.chocomint.tdx.transportation.metro.MetroLine
+import net.chocomint.tdx.transportation.metro.MetroODFare
+import net.chocomint.tdx.transportation.metro.TravelTime
 import org.locationtech.jts.geom.LineString
 import org.locationtech.jts.io.WKTReader
 import java.io.InputStreamReader
@@ -84,27 +84,24 @@ object THSR {
     }
 }
 
-object TRTC {
+object TaipeiMetro {
+    @MergedData
     fun readStations(): List<Station> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/Station.json"))
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Station.json"))
             .asJsonArray
             .map { Station.fromJson(it.asJsonObject) }
     }
 
-    fun readLines(): List<TRTCLine> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/Line.json"))
+    @MergedData
+    fun readLines(): List<MetroLine> {
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Line.json"))
             .asJsonArray
-            .map { TRTCLine.fromJson(it.asJsonObject) }
+            .map { MetroLine.fromJson(it.asJsonObject) }
     }
 
-    fun readShapes(): List<ShapeUnit> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/Shape.json"))
-            .asJsonArray
-            .map { ShapeUnit.fromJson(it.asJsonObject) }
-    }
-
+    @MergedData
     fun readTravelTimes(): List<TravelTime> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/S2STravelTime.json"))
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/S2STravelTime.json"))
             .asJsonArray
             .flatMap {
                 it.asJsonObject["TravelTimes"].asJsonArray
@@ -112,15 +109,32 @@ object TRTC {
             }
     }
 
+    @NoNTMCData
+    fun readShapes(): List<ShapeUnit> {
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Shape.json"))
+            .asJsonArray
+            .map { ShapeUnit.fromJson(it.asJsonObject) }
+    }
+
+    @NoNTMCData
     fun readStationTimetables(): List<StationTimetable> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/StationTimeTable.json"))
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/StationTimeTable.json"))
             .asJsonArray
             .map { StationTimetable.fromJson(it.asJsonObject) }
     }
 
-    fun readODFares(): List<TRTCODFare> {
-        return JsonParser.parseReader(resource("/tdx/TRTC/ODFare.json"))
+    @MergedData
+    @ForMergingData
+    fun readODFares(): List<MetroODFare> {
+        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/ODFare-TRTC.json"))
             .asJsonArray
-            .map { TRTCODFare.fromJson(it.asJsonObject) }
+            .map { MetroODFare.fromJson(it.asJsonObject) } +
+                JsonParser.parseReader(resource("/tdx/TaipeiMetro/ODFare-NTMC.json"))
+                    .asJsonArray
+                    .map { MetroODFare.fromJson(it.asJsonObject) }
     }
+
+    annotation class MergedData
+    annotation class NoNTMCData
+    annotation class ForMergingData
 }

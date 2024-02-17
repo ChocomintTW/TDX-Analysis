@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test
 
 class PublicTransportationTest {
     @Test
-    fun readTest() {
-        // TRA check
+    fun checkTRA() {
         val odFares = TRA.readODFares()
         val map = odFares.map { it.originStationID to it.destinationStationID }
             .groupingBy { it }.eachCount()
@@ -16,10 +15,12 @@ class PublicTransportationTest {
         val list = odFares.groupBy { Triple(it.originStationID, it.destinationStationID, it.trainTypeCode) }
             .map { it.value.minBy { fare -> fare.price!! } }
         list.forEach { println("${it.originStationID} | ${it.destinationStationID} -> ${it.price}") }
+    }
 
-        // TRTC check
-        val x = TRTC.readODFares()
-        x.filter { it.travelDistance == null }.forEach { println(it.originStationID) }
+    @Test
+    fun checkMetro() {
+        val x = TaipeiMetro.readStations()
+        println(x.size)
     }
 
     @Test
@@ -41,12 +42,12 @@ class PublicTransportationTest {
     }
 
     @Test
-    fun testTRTC() {
-        TRTC.readStations()
-        TRTC.readLines()
-        TRTC.readShapes()
-        TRTC.readTravelTimes()
-        TRTC.readStationTimetables()
-        TRTC.readODFares()
+    fun testMetro() {
+        TaipeiMetro.readStations()
+        TaipeiMetro.readLines()
+        TaipeiMetro.readShapes()
+        TaipeiMetro.readTravelTimes()
+        TaipeiMetro.readStationTimetables()
+        TaipeiMetro.readODFares()
     }
 }
