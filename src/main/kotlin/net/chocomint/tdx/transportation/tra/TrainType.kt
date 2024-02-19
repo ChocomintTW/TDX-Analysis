@@ -1,8 +1,8 @@
 package net.chocomint.tdx.transportation.tra
 
 import com.google.gson.JsonObject
-import net.chocomint.tdx.Name
-import net.chocomint.tdx.Name.Companion.asName
+import net.chocomint.tdx.utils.Name
+import net.chocomint.tdx.utils.Name.Companion.asName
 
 data class TrainType(
     val id: String,

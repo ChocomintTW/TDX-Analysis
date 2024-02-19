@@ -3,7 +3,7 @@ package net.chocomint.tdx.transportation
 import com.google.gson.JsonObject
 
 data class TrainTimetable(
-    val trainNo: String,
+    val trainNo: Int,
     val trainTypeID: String?,
     val startStationID: String,
     val endStationID: String,
@@ -14,7 +14,7 @@ data class TrainTimetable(
         fun fromJson(json: JsonObject, infoKey: String = "TrainInfo"): TrainTimetable {
             val trainInfo = json[infoKey].asJsonObject
 
-            val trainNo        = trainInfo["TrainNo"].asString
+            val trainNo        = trainInfo["TrainNo"].asString.toInt()
             val trainTypeID    = trainInfo["TrainTypeID"]?.asString
             val startStationID = trainInfo["StartingStationID"].asString
             val endStationID   = trainInfo["EndingStationID"].asString

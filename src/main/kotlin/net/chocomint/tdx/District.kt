@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import net.chocomint.tdx.district.CityBoundaryShape
 import net.chocomint.tdx.district.TownBoundaryShape
 import net.chocomint.tdx.district.VillageBoundaryShape
+import net.chocomint.tdx.utils.resource
 
 object District {
     fun readCityBoundary(): List<CityBoundaryShape> {

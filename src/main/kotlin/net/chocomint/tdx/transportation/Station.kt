@@ -1,8 +1,8 @@
 package net.chocomint.tdx.transportation
 
 import com.google.gson.JsonObject
-import net.chocomint.tdx.Name
-import net.chocomint.tdx.Name.Companion.asName
+import net.chocomint.tdx.utils.Name
+import net.chocomint.tdx.utils.Name.Companion.asName
 import net.chocomint.tdx.utils.Position
 
 data class Station(

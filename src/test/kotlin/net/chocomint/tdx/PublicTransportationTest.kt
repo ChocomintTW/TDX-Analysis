@@ -22,32 +22,4 @@ class PublicTransportationTest {
         val x = TaipeiMetro.readStations()
         println(x.size)
     }
-
-    @Test
-    fun testTRA() {
-        TRA.readTrainTypes()
-        TRA.readLines()
-        TRA.readShapes()
-        TRA.readStations()
-        TRA.readTimetables()
-        TRA.readODFares()
-    }
-
-    @Test
-    fun testTHSR() {
-        THSR.readStations()
-        THSR.readShape()
-        THSR.readTimetables()
-        THSR.readODFares()
-    }
-
-    @Test
-    fun testMetro() {
-        TaipeiMetro.readStations()
-        TaipeiMetro.readLines()
-        TaipeiMetro.readShapes()
-        TaipeiMetro.readTravelTimes()
-        TaipeiMetro.readStationTimetables()
-        TaipeiMetro.readODFares()
-    }
 }

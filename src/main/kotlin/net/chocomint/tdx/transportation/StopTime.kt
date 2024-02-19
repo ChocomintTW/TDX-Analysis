@@ -9,6 +9,10 @@ data class StopTime(
     val arrivalTime: LocalTime?,
     val departureTime: LocalTime?
 ) {
+    override fun toString(): String {
+        return "$stationID[$arrivalTime-$departureTime]"
+    }
+
     companion object {
         fun fromJson(json: JsonObject): StopTime {
             val stationID     = json["StationID"].asString

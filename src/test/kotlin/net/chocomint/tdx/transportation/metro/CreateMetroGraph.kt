@@ -3,8 +3,6 @@ package net.chocomint.tdx.transportation.metro
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import net.chocomint.tdx.TaipeiMetro
-import net.chocomint.tdx.utils.findByID
-import net.chocomint.tdx.utils.stationIsNeighbor
 import java.io.File
 
 fun main() {
@@ -14,9 +12,10 @@ fun main() {
     )
 
     val taipeiMetroODFares = TaipeiMetro.readODFares()
-    val stations = TaipeiMetro.readStations()
+    val processor = TaipeiMetro.Processor()
     val neighborJson = taipeiMetroODFares
-        .filter { stationIsNeighbor(it.originStationID, it.destinationStationID) }
+        .asSequence()
+        .filter { processor.stationByCode(it.destinationStationID) isNextTo processor.stationByCode(it.originStationID) }
         .map {
             if (it.travelDistance == null) {
                 MetroODFare(
@@ -30,11 +29,19 @@ fun main() {
         }
         .map {
             JsonObject().apply {
-                addProperty("from", stations.findByID(it.originStationID).name.zh)
-                addProperty("to", stations.findByID(it.destinationStationID).name.zh)
+                addProperty("from", processor.stationByCode(it.originStationID).name.zh)
+                addProperty("to", processor.stationByCode(it.destinationStationID).name.zh)
                 addProperty("distance", it.travelDistance)
             }
         }
+        .toSet().toList()
+        .toMutableList()
+
+    neighborJson += JsonObject().apply {
+        addProperty("from", "新埔")
+        addProperty("to", "新埔民生")
+        addProperty("distance", 0.0)
+    }
 
     File(System.getProperty("user.dir") + "/src/main/resources/tdx/TaipeiMetro/TaipeiMetroGraph.json")
         .writeText(GsonBuilder().setPrettyPrinting().create().toJson(neighborJson))

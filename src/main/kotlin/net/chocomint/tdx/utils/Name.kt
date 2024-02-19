@@ -1,4 +1,4 @@
-package net.chocomint.tdx
+package net.chocomint.tdx.utils
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
