@@ -3,9 +3,10 @@
 本專案主要以 Kotlin 分析 [運輸資料流通服務 TDX](https://tdx.transportdata.tw/) 平台之部分資料，資料來源皆由此平台提供檔案下載至本地端進行分析，
 並遵守 [資料授權利用規範](https://tdx.transportdata.tw/term)。
 
-## 票價檔說明
+## 檔案說明
 
-由於原始檔案 `ODFare.json` 過於巨大 (563 MB) 以致無法讀取與分析，因此我將檔案以 python 將其簡化，得到了 `resource/tdx/TRA/ODFare-Simple.json`，檔案大小約 41.6 MB。
+### 台鐵票價檔
+由於台鐵票價原始檔案 `ODFare.json` 過於巨大 (563 MB) 以致無法讀取與分析，因此我將檔案以 python 將其簡化，得到了 `resource/tdx/TRA/ODFare-Simple.json`，檔案大小約 41.6 MB。
 
 <details>
   <summary>python 程式碼</summary>
@@ -38,10 +39,11 @@ with open("ODFare-Simple.json", 'w') as json_file:
 
 </details>
 
-## `TaipeiMetroGraph.json`
-由 `test/.../metro/CreateMetroGraph.kt` 整合 `ODFare-TRTC.json` 與 `ODFare-NTMC.json` 進行運算生成，存有大台北地區捷運的無向圖，用來計算票價 (使用 Floyd-Warshall 演算法)。
+### 手動修改資料
+`resource/tdx/TaipeiMetro/` 中的 `Line.json`、`Station.json`、`S2STravelTime.json` 皆為手動將新北捷運(現僅環狀線)的資料合併進台北捷運的資料中。
 
-## 檔案錯誤問題
+### 大台北捷運票價檔整合
+由 `test/.../metro/CreateMetroGraph.kt` 整合 `ODFare-TRTC.json` 與 `ODFare-NTMC.json` 進行運算生成 `TaipeiMetroGraph.json`，存有大台北地區捷運的無向圖，用來計算票價 (使用 Floyd-Warshall 演算法)。
 
-### 大台北捷運
-`StationTimeTable.json` 中將原應為 `DestinationStationID` 錯誤的弄成了 `DestinationStaionID`，因此程式碼中先行以其提供之原始 key:`DestinationStaionID` 進行讀取。
+### 大台北捷運檔案錯誤問題
+`resource/tdx/TaipeiMetro/StationTimeTable.json` 中將原應為 `DestinationStationID` 錯誤的弄成了 `DestinationStaionID`，因此程式碼中先行以其提供之原始 key:`DestinationStaionID` 進行讀取。
