@@ -43,6 +43,6 @@ fun main() {
         addProperty("distance", 0.0)
     }
 
-    File(System.getProperty("user.dir") + "/src/main/resources/tdx/TaipeiMetro/TaipeiMetroGraph.json")
+    File(System.getProperty("user.dir") + "/src/main/resources/tdx/metro/taipei/TaipeiMetroGraph.json")
         .writeText(GsonBuilder().setPrettyPrinting().create().toJson(neighborJson))
 }

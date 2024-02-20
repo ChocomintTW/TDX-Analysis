@@ -12,21 +12,21 @@ import java.awt.Color
 object TaipeiMetro {
     @MergedData
     fun readStations(): List<Station> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Station.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/Station.json"))
             .asJsonArray
             .map { Station.fromJson(it.asJsonObject) }
     }
 
     @MergedData
     fun readLines(): List<MetroLine> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Line.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/Line.json"))
             .asJsonArray
             .map { MetroLine.fromJson(it.asJsonObject) }
     }
 
     @MergedData
     fun readTravelTimes(): List<TravelTime> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/S2STravelTime.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/S2STravelTime.json"))
             .asJsonArray
             .flatMap {
                 it.asJsonObject["TravelTimes"].asJsonArray
@@ -36,14 +36,14 @@ object TaipeiMetro {
 
     @NoNTMCData
     fun readShapes(): List<ShapeUnit> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/Shape.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/Shape.json"))
             .asJsonArray
             .map { ShapeUnit.fromJson(it.asJsonObject) }
     }
 
     @NoNTMCData
     fun readStationTimetables(): List<StationTimetable> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/StationTimeTable.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/StationTimeTable.json"))
             .asJsonArray
             .map { StationTimetable.fromJson(it.asJsonObject) }
     }
@@ -51,10 +51,10 @@ object TaipeiMetro {
     @MergedData
     @ForMergingData
     fun readODFares(): List<MetroODFare> {
-        return JsonParser.parseReader(resource("/tdx/TaipeiMetro/ODFare-TRTC.json"))
+        return JsonParser.parseReader(resource("/tdx/metro/taipei/ODFare-TRTC.json"))
             .asJsonArray
             .map { MetroODFare.fromJson(it.asJsonObject) } +
-                JsonParser.parseReader(resource("/tdx/TaipeiMetro/ODFare-NTMC.json"))
+                JsonParser.parseReader(resource("/tdx/metro/taipei/ODFare-NTMC.json"))
                     .asJsonArray
                     .map { MetroODFare.fromJson(it.asJsonObject) }
     }
@@ -83,7 +83,7 @@ object TaipeiMetro {
             }
 
         private val metroGraph: List<Dijkstra.Edge> = JsonParser
-            .parseReader(resource("/tdx/TaipeiMetro/TaipeiMetroGraph.json"))
+            .parseReader(resource("/tdx/metro/taipei/TaipeiMetroGraph.json"))
             .asJsonArray
             .flatMap {
                 val json = it.asJsonObject

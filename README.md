@@ -40,10 +40,10 @@ with open("ODFare-Simple.json", 'w') as json_file:
 </details>
 
 ### 手動修改資料
-`resource/tdx/TaipeiMetro/` 中的 `Line.json`、`Station.json`、`S2STravelTime.json` 皆為手動將新北捷運(現僅環狀線)的資料合併進台北捷運的資料中。
+`resource/tdx/metro/taipei/` 中的 `Line.json`、`Station.json`、`S2STravelTime.json` 皆為手動將新北捷運(現僅環狀線)的資料合併進台北捷運的資料中。
 
 ### 大台北捷運票價檔整合
 由 `test/.../metro/CreateMetroGraph.kt` 整合 `ODFare-TRTC.json` 與 `ODFare-NTMC.json` 進行運算生成 `TaipeiMetroGraph.json`，存有大台北地區捷運的無向圖，用來計算票價 (使用 Floyd-Warshall 演算法)。
 
 ### 大台北捷運檔案錯誤問題
-`resource/tdx/TaipeiMetro/StationTimeTable.json` 中將原應為 `DestinationStationID` 錯誤的弄成了 `DestinationStaionID`，因此程式碼中先行以其提供之原始 key:`DestinationStaionID` 進行讀取。
+`resource/tdx/metro/taipei/StationTimeTable.json` 中將原應為 `DestinationStationID` 錯誤的弄成了 `DestinationStaionID`，因此程式碼中先行以其提供之原始 key:`DestinationStaionID` 進行讀取。
