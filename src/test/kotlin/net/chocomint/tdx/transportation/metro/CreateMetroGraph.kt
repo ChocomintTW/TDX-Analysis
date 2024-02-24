@@ -15,7 +15,7 @@ fun main() {
     val processor = TaipeiMetro.Processor()
     val neighborJson = taipeiMetroODFares
         .asSequence()
-        .filter { processor.stationByCode(it.destinationStationID) isNextTo processor.stationByCode(it.originStationID) }
+        .filter { processor.stationByCode(it.destinationStationID)!! isNextTo processor.stationByCode(it.originStationID)!! }
         .map {
             if (it.travelDistance == null) {
                 MetroODFare(
@@ -29,8 +29,8 @@ fun main() {
         }
         .map {
             JsonObject().apply {
-                addProperty("from", processor.stationByCode(it.originStationID).name.zh)
-                addProperty("to", processor.stationByCode(it.destinationStationID).name.zh)
+                addProperty("from", processor.stationByCode(it.originStationID)!!.name.zh)
+                addProperty("to", processor.stationByCode(it.destinationStationID)!!.name.zh)
                 addProperty("distance", it.travelDistance)
             }
         }

@@ -4,6 +4,8 @@ data class TaipeiMetroCode(private val id: String) {
     val line: String
     val stationNumber: String
 
+    val code: String get() = id
+
     init {
         val des = Regex("([A-Z]+)(.*)").matchEntire(id)!!.destructured
         line          = des.component1()

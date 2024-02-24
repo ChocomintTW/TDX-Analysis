@@ -33,9 +33,8 @@ fun <T> Iterable<T>.printAll() {
     forEach(::println)
 }
 
-fun <T> Iterable<T>.printAll(title: String) {
-    println(title)
-    forEach(::println)
+inline fun <T> Iterable<T>.printAll(transform: (T) -> String) {
+    forEach { println(transform(it)) }
 }
 
 fun <K, V> Map<out K, V>.printAll() {

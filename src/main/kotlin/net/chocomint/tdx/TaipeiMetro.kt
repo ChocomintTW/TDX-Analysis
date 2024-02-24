@@ -42,10 +42,10 @@ object TaipeiMetro {
     }
 
     @NoNTMCData
-    fun readStationTimetables(): List<StationTimetable> {
+    fun readStationTimetables(): List<MetroStationTimetable> {
         return JsonParser.parseReader(resource("/tdx/metro/taipei/StationTimeTable.json"))
             .asJsonArray
-            .map { StationTimetable.fromJson(it.asJsonObject) }
+            .map { MetroStationTimetable.fromJson(it.asJsonObject) }
     }
 
     @MergedData
@@ -68,7 +68,7 @@ object TaipeiMetro {
         val lines: List<MetroLine> = readLines(),
         private val travelTimes: List<TravelTime> = readTravelTimes(),
         private val shapes: List<ShapeUnit> = readShapes(),
-        private val stationTimeTables: List<StationTimetable> = readStationTimetables()
+        private val metroStationTimeTables: List<MetroStationTimetable> = readStationTimetables()
     ) {
         private val shortestDistanceGraph: Array<DoubleArray>
 
@@ -120,12 +120,12 @@ object TaipeiMetro {
 
         private val stationAmount: Int get() = stations.size
 
-        fun stationByName(name: String): TaipeiMetroStation {
-            return stations.findByName(name)
+        fun stationByName(name: String): TaipeiMetroStation? {
+            return stations.find { it.name equalString name }
         }
 
-        fun stationByCode(code: String): TaipeiMetroStation {
-            return stations.findByCode(code)
+        fun stationByCode(code: String): TaipeiMetroStation? {
+            return stations.find { it.code.contains(TaipeiMetroCode(code)) }
         }
 
         private fun distToPrice(dist: Double): Int {
@@ -145,8 +145,8 @@ object TaipeiMetro {
         }
 
         fun priceBetween(station1: String, station2: String): Int {
-            val index1 = stations.indexOf(stations.findByName(station1))
-            val index2 = stations.indexOf(stations.findByName(station2))
+            val index1 = stations.indexOf(stationByName(station1))
+            val index2 = stations.indexOf(stationByName(station2))
 
             println(shortestDistanceGraph[index1][index2])
 
@@ -154,67 +154,67 @@ object TaipeiMetro {
         }
 
         fun priceBetween(station1: TaipeiMetroCode, station2: TaipeiMetroCode): Int {
-            val index1 = stations.indexOf(stations.findByCode(station1.toString()))
-            val index2 = stations.indexOf(stations.findByCode(station2.toString()))
+            val index1 = stations.indexOf(stationByCode(station1.code))
+            val index2 = stations.indexOf(stationByCode(station2.code))
 
             return distToPrice(shortestDistanceGraph[index1][index2])
         }
 
-        @JvmInline
-        value class Path(private val stationList: List<TaipeiMetroStation>) {
-            override fun toString(): String {
-                return stationList.joinToString(" -> ")
-            }
-
-            fun print(lines: List<MetroLine> = readLines()) {
-                val colors = stationList
-                    .subList(0, stationList.size - 1)
-                    .mapIndexed { index, station -> Pair(station, stationList[index + 1]) }
-                    .map {
-                        val st1 = it.first
-                        val st2 = it.second
-
-                        st1.code
-                            .flatMap { c1 ->
-                                st2.code
-                                    .filter { c2 ->
-                                        c1.line == c2.line
-                                    }
-                                    .map { c2 -> c1 to c2 }
-                            }
-                    }
-                    .map {
-                        if (it.isEmpty())
-                            Color.WHITE
-                        else
-                            lines.find { line -> line.id == it[0].first.line }!!.color
-                    }
-
-                for (i in 0..(stationList.size - 2)) {
-                    val st = stationList[i]
-                    if (i > 0 && colors[i - 1] != colors[i])
-                        print(rgbBg(Color.darkGray, st.toString()))
-                    else
-                        print(st)
-
-                    if (colors[i] == Color.WHITE)
-                        print(rgbBg(Color.darkGray, " -[站外轉乘]- "))
-                    else
-                        print(rgbText(colors[i], " -> "))
-                }
-                println(stationList.last())
-            }
-        }
-
         fun shortestPath(station1Name: String, station2Name: String): Path {
-            val station1 = stations.findByName(station1Name)
-            val station2 = stations.findByName(station2Name)
+            val station1 = stationByName(station1Name)!!
+            val station2 = stationByName(station2Name)!!
 
             return Dijkstra
                 .findShortestPath(metroGraph, station1, station2)
                 .shortestPath()
                 .map { it as TaipeiMetroStation }
                 .let { Path(it) }
+        }
+    }
+
+    @JvmInline
+    value class Path(private val stationList: List<TaipeiMetroStation>) {
+        override fun toString(): String {
+            return stationList.joinToString(" -> ")
+        }
+
+        fun print(lines: List<MetroLine> = readLines()) {
+            val colors = stationList
+                .subList(0, stationList.size - 1)
+                .mapIndexed { index, station -> Pair(station, stationList[index + 1]) }
+                .map {
+                    val st1 = it.first
+                    val st2 = it.second
+
+                    st1.code
+                        .flatMap { c1 ->
+                            st2.code
+                                .filter { c2 ->
+                                    c1.line == c2.line
+                                }
+                                .map { c2 -> c1 to c2 }
+                        }
+                }
+                .map {
+                    if (it.isEmpty())
+                        Color.WHITE
+                    else
+                        lines.find { line -> line.id == it[0].first.line }!!.color
+                }
+
+            for (i in 0..(stationList.size - 2)) {
+                val st = stationList[i]
+                if (i > 0 && colors[i - 1] != colors[i])
+                    print(rgbBg(Color.darkGray, st.toString()))
+                else
+                    print(st)
+
+                if (colors[i] == Color.WHITE)
+                    print(rgbBg(Color.darkGray, " -[站外轉乘]- "))
+                else
+                    print(rgbText(colors[i], " -> "))
+            }
+            println(stationList.last())
         }
     }
 }
