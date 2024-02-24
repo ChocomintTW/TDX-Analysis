@@ -10,7 +10,7 @@ data class ServiceDay(
     val typhoon: Boolean?
 ) {
     fun isAvailableOn(day: DayOfWeek): Boolean {
-        return week[day.value]
+        return week[day.value - 1]
     }
 
     fun isEveryday(): Boolean {
@@ -19,6 +19,16 @@ data class ServiceDay(
 
     fun onlyWeekend(): Boolean {
         return week == "0000011".map { it == '1' }
+    }
+
+    override fun toString(): String {
+        if (isEveryday())
+            return "everyday"
+        if (onlyWeekend())
+            return "weekend"
+
+        val serviceDays = week.mapIndexed { i, b -> if (b) weekNames[i].take(3) else null }.filterNotNull()
+        return "srv. ${serviceDays.joinToString(", ")}"
     }
 
     companion object {
